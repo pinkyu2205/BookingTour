@@ -23,6 +23,9 @@ public partial class ChatWindow : Window
         _service.MessageReceived += OnMessageReceived;
         _service.Disconnected += OnDisconnected;
 
+        // Initialize user list in case the message arrived before we subscribed
+        UpdateUserList(_service.CurrentUsers);
+
         TxtMessage.Focus();
     }
 
