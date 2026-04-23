@@ -16,6 +16,7 @@ public class ChatService
 
     public string Username { get; private set; } = string.Empty;
     public bool IsConnected => _client?.Connected ?? false;
+    public List<string> CurrentUsers { get; private set; } = new();
 
     public event Action<ChatMessage>? MessageReceived;
     public event Action<Exception>? Disconnected;
@@ -49,7 +50,13 @@ public class ChatService
                 {
                     var msg = JsonSerializer.Deserialize<ChatMessage>(line);
                     if (msg != null)
+                    {
+                        if (msg.Type == "USERLIST")
+                        {
+                            CurrentUsers = msg.Users;
+                        }
                         MessageReceived?.Invoke(msg);
+                    }
                 }
                 catch {}
             }
